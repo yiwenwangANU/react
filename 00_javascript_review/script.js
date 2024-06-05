@@ -142,3 +142,89 @@ function getBooks() {
 function getBook(id) {
   return data.find((d) => d.id === id);
 }
+
+// Object Destruction
+const book = getBook(1);
+const { title, author, pages, publicationDate, genres, hasMovieAdaptation } =
+  book;
+console.log(title, author, genres);
+
+// Array Destruction
+// const primaryGenres = genres[0];
+// const secondaryGenres = genres[1];
+
+const [primaryGenres, secondaryGenres, ...otherGenres] = genres; // rest operator
+console.log(primaryGenres, secondaryGenres, otherGenres);
+
+// Spread operator
+const newGenres = [...genres, "epic fantacy"]; // spread operator in array
+console.log(newGenres);
+
+const updatedBook = {
+  // spread operator in object
+  ...book,
+  moviePublicationDate: 2021 - 12 - 1,
+  pages: 2010, // can overwrite the existing property
+};
+console.log(updatedBook);
+
+// Template Literal
+const summary = `${title}, is a ${pages} pages book and published in ${
+  publicationDate.split("-")[0]
+}`;
+console.log(summary);
+
+// Logical Operator
+console.log(true && "Some String"); // will return second value if first value is true
+console.log(false && "Some String"); // will return first value if first value is false
+// false value can be 0, '', null, undefined
+console.log(0 && "Some String");
+
+// Working with undefined
+// To avoid undefined.anything, using ? to return undefined beforehead
+// book.reviews?.librarything?.reviewsCount returns book.reviews.librarything.reviewsCount
+// when book.reviews and book.reviews.librarything is not undefined, and return undefined otherwise
+const count = book.reviews?.librarything?.reviewsCount ?? "no data"; // return second value only if first value is null or undefined, otherwise return first value
+console.log(count);
+
+// Map, filter, reduce, sort
+const x = [1, 2, 3, 4, 5].map((element) => element + 1);
+console.log(x);
+const books = getBooks().map((ele) => ele.title);
+console.log(books);
+
+const y = [1, 2, 3, 4, 5].filter((element) => element > 2);
+console.log(y);
+const longBooks = getBooks()
+  .filter((ele) => ele.pages > 500)
+  .map((ele) => ele.title);
+console.log(longBooks);
+
+const z = [1, 2, 3, 4, 5].reduce((acc, element) => acc + element, 0);
+console.log(z);
+
+const xx = [6, 5, 3, 1, 2];
+const sorted = [...xx].sort((a, b) => a - b); // change the original array, so copy the array first
+console.log(sorted);
+const sortedBooks = [...getBooks()]
+  .sort((a, b) => a.pages - b.pages)
+  .map((element) => {
+    return { title: element.title, pages: element.pages };
+  });
+console.log(sortedBooks);
+
+// Arrays
+const newBook = {
+  id: 6,
+  title: "Harry Potter and chamber of secrets",
+  author: "J.K.Rowling",
+};
+const booksAfterAdding = [...getBooks(), newBook];
+
+const booksAfterDelete = getBooks().filter((book) => book.id !== 3);
+console.log(booksAfterDelete);
+
+const booksAfterUpdate = getBooks().map((book) =>
+  book.id === 1 ? { ...book, pages: 1 } : book
+);
+console.log(booksAfterUpdate);
