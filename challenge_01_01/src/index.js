@@ -70,27 +70,27 @@ function SkillList() {
   return (
     <div className="skill-list">
       {skill_list.map((skill) => (
-        <Skill
-          skill={skill.skill}
-          emoji={chooseEmoji(skill.level)}
-          color={skill.color}
-        />
+        <Skill skill={skill.skill} level={skill.level} color={skill.color} />
       ))}
     </div>
   );
 }
 
-function chooseEmoji(level) {
-  if (level === "beginner") return "😺";
-  else if (level === "intermediate") return "👍";
-  else return "💪";
-}
+// function chooseEmoji(level) {
+//   if (level === "beginner") return "😺";
+//   else if (level === "intermediate") return "👍";
+//   else return "💪";
+// }
 
-function Skill(props) {
+function Skill({ color, skill, level }) {
   return (
-    <div className="skill" style={{ backgroundColor: props.color }}>
-      <span>{props.skill}</span>
-      <span>{props.emoji}</span>
+    <div className="skill" style={{ backgroundColor: color }}>
+      <span>{skill}</span>
+      <span>
+        {level === "beginner" && "😺"}
+        {level === "intermediate" && "👍"}
+        {level === "advanced" && "💪"}
+      </span>
     </div>
   );
 }
