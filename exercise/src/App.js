@@ -45,15 +45,33 @@ const questions = [
 
 function FlashCards() {
   return (
-    <div className="FlashCards">
+    <div className="flashcards">
       {questions.map((q) => (
-        <FlashCard cardObject={q} />
+        <FlashCard cardObject={q} key={q.id} />
       ))}
     </div>
   );
 }
 
 function FlashCard({ cardObject }) {
-  // const [cardState, setCardState] = useState();
-  return <div>{cardObject.question}</div>;
+  const [selectedId, setSelectedId] = useState(null);
+  function handleClick(id) {
+    console.log("Before update:", selectedId); // Log before updating the state
+    setSelectedId(id);
+    console.log("After update:", id); // Log the id that is set
+  }
+  return (
+    <div
+      className={selectedId === cardObject.id ? "selected" : ""}
+      onClick={() => {
+        handleClick(cardObject.id);
+      }}
+    >
+      {selectedId === cardObject.id ? (
+        <p>{cardObject.answer}</p>
+      ) : (
+        <p>{cardObject.question}</p>
+      )}
+    </div>
+  );
 }
