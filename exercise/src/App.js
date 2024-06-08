@@ -44,34 +44,26 @@ const questions = [
 ];
 
 function FlashCards() {
+  const [selectedId, setSelectedId] = useState(null);
+  function handleClick(id) {
+    if (id === selectedId) {
+      setSelectedId(null);
+    } else {
+      setSelectedId(id);
+    }
+  }
   return (
     <div className="flashcards">
       {questions.map((q) => (
-        <FlashCard cardObject={q} key={q.id} />
+        <div
+          className={selectedId === q.id ? "selected" : ""}
+          onClick={() => {
+            handleClick(q.id);
+          }}
+        >
+          {selectedId === q.id ? <p>{q.answer}</p> : <p>{q.question}</p>}
+        </div>
       ))}
-    </div>
-  );
-}
-
-function FlashCard({ cardObject }) {
-  const [selectedId, setSelectedId] = useState(null);
-  function handleClick(id) {
-    console.log("Before update:", selectedId); // Log before updating the state
-    setSelectedId(id);
-    console.log("After update:", id); // Log the id that is set
-  }
-  return (
-    <div
-      className={selectedId === cardObject.id ? "selected" : ""}
-      onClick={() => {
-        handleClick(cardObject.id);
-      }}
-    >
-      {selectedId === cardObject.id ? (
-        <p>{cardObject.answer}</p>
-      ) : (
-        <p>{cardObject.question}</p>
-      )}
     </div>
   );
 }
