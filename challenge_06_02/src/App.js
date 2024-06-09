@@ -7,7 +7,7 @@ function App() {
 }
 
 function Counter() {
-  const [step, setStep] = useState(4);
+  const [step, setStep] = useState(1);
   const [count, setCount] = useState(0);
   const date = new Date();
   date.setDate(date.getDate() + count);
@@ -44,6 +44,18 @@ function Counter() {
           {count > 0 && `${count} days from today is `}
           {date.toDateString()}
         </p>
+      </div>
+      <div className="resetcontainer">
+        {count !== 0 || step !== 1 ? (
+          <button
+            onClick={() => {
+              setCount(0);
+              setStep(1);
+            }}
+          >
+            Reset
+          </button>
+        ) : null}
       </div>
     </>
   );
