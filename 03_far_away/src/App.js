@@ -32,7 +32,7 @@ function App() {
         handleDeleteItems={handleDeleteItems}
         handleToggleItem={handleToggleItem}
       />
-      <Stats />
+      <Stats packList={packList} />
     </div>
   );
 }
@@ -103,10 +103,15 @@ function Item({ item, handleDeleteItems, handleToggleItem }) {
     </li>
   );
 }
-function Stats() {
+function Stats({ packList }) {
+  const itemNumber = packList.length;
+  const itemPacked = packList.filter((i) => i.packed).length;
   return (
     <footer className="stats">
-      <em>💼You have X items on your list, and you have packed X(X%)</em>
+      <em>
+        💼You have {itemNumber} items on your list, and you have packed{" "}
+        {itemPacked} item({(itemPacked / itemNumber).toFixed(2)}%).
+      </em>
     </footer>
   );
 }
