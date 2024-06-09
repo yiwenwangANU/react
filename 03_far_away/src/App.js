@@ -10,7 +10,7 @@ function App() {
   return (
     <div className="app">
       <Logo />
-      <Form packList={packList} setPacklist={setPacklist} />
+      <Form setPacklist={setPacklist} />
       <PackingList packList={packList} />
       <Stats />
     </div>
@@ -20,7 +20,7 @@ function App() {
 function Logo() {
   return <h1>🌴Far Away👜</h1>;
 }
-function Form({ packList, setPacklist }) {
+function Form({ setPacklist }) {
   const [description, setDescription] = useState("");
   const [quantity, setQuantity] = useState(1);
 
@@ -29,7 +29,7 @@ function Form({ packList, setPacklist }) {
     if (!description) return;
     const newItem = { description, quantity, packed: false, id: Date.now() };
     console.log(newItem);
-    setPacklist([...packList, newItem]);
+    setPacklist((packList) => [...packList, newItem]);
 
     setDescription("");
     setQuantity(1);
