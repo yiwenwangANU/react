@@ -7,10 +7,15 @@ const initialItems = [
 
 function App() {
   const [packList, setPacklist] = useState(initialItems);
+
+  function handleAddItems(item) {
+    setPacklist((packList) => setPacklist([...packList, item]));
+  }
+
   return (
     <div className="app">
       <Logo />
-      <Form setPacklist={setPacklist} />
+      <Form setPacklist={handleAddItems} />
       <PackingList packList={packList} />
       <Stats />
     </div>
@@ -20,7 +25,7 @@ function App() {
 function Logo() {
   return <h1>🌴Far Away👜</h1>;
 }
-function Form({ setPacklist }) {
+function Form({ handleAddItems }) {
   const [description, setDescription] = useState("");
   const [quantity, setQuantity] = useState(1);
 
@@ -29,7 +34,7 @@ function Form({ setPacklist }) {
     if (!description) return;
     const newItem = { description, quantity, packed: false, id: Date.now() };
     console.log(newItem);
-    setPacklist((packList) => [...packList, newItem]);
+    handleAddItems(newItem);
 
     setDescription("");
     setQuantity(1);
