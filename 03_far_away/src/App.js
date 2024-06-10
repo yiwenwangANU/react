@@ -1,5 +1,9 @@
 import "./index.css";
 import { useState } from "react";
+import Logo from "./Logo";
+import Form from "./Form";
+import PackingList from "./PackingList";
+import Stats from "./Stats";
 const initialItems = [
   { id: 1, description: "Passports", quantity: 2, packed: false },
   { id: 2, description: "Socks", quantity: 12, packed: true },
@@ -42,115 +46,4 @@ function App() {
   );
 }
 
-function Logo() {
-  return <h1>🌴Far Away👜</h1>;
-}
-
-function Form({ handleAddItems }) {
-  const [description, setDescription] = useState("");
-  const [quantity, setQuantity] = useState(1);
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    if (!description) return;
-    const newItem = { description, quantity, packed: false, id: Date.now() };
-    handleAddItems(newItem);
-
-    setDescription("");
-    setQuantity(1);
-  }
-  return (
-    <form className="add-form" onSubmit={handleSubmit}>
-      <h3>What do you need for your 😍 trip?</h3>
-      <select value={quantity} onChange={(e) => setQuantity(+e.target.value)}>
-        {Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
-          <option value={num} key={num}>
-            {num}
-          </option>
-        ))}
-      </select>
-      <input
-        type="text"
-        placeHolder="items..."
-        value={description}
-        onChange={(e) => {
-          setDescription(e.target.value);
-        }}
-      />
-      <button>Add</button>
-    </form>
-  );
-}
-function PackingList({
-  packList,
-  handleDeleteItems,
-  handleToggleItem,
-  handleClearList,
-}) {
-  const [action, setAction] = useState("input");
-  let sortedList;
-  if (action === "input") sortedList = packList;
-  if (action === "description") {
-    sortedList = [...packList].sort((a, b) =>
-      a.description.localeCompare(b.description)
-    );
-  }
-  if (action === "stats")
-    sortedList = [...packList].sort(
-      (a, b) => Number(a.packed) - Number(b.packed)
-    );
-  return (
-    <div className="list">
-      <ul>
-        {sortedList.map((item) => (
-          <Item
-            item={item}
-            handleDeleteItems={handleDeleteItems}
-            handleToggleItem={handleToggleItem}
-            key={item.id}
-          />
-        ))}
-      </ul>
-      <div className="actions">
-        <select value={action} onChange={(e) => setAction(e.target.value)}>
-          <option value="input">SORT BY INPUT ORDER</option>
-          <option value="description">SORT BY DESCRIPTION</option>
-          <option value="stats">SORT BY PACKED STATS</option>
-        </select>
-        <button className="" onClick={(e) => handleClearList()}>
-          Clear List
-        </button>
-      </div>
-    </div>
-  );
-}
-function Item({ item, handleDeleteItems, handleToggleItem }) {
-  return (
-    <li>
-      <input type="checkbox" onChange={(e) => handleToggleItem(item.id)} />
-      <span style={item.packed ? { textDecoration: "line-through" } : {}}>
-        {item.quantity} {item.description}
-      </span>
-      <button onClick={(e) => handleDeleteItems(item.id)}>❌</button>
-    </li>
-  );
-}
-function Stats({ packList }) {
-  if (!packList.length)
-    return (
-      <p className="stats">
-        <em>Start adding some items to you packing list 🚀</em>
-      </p>
-    );
-  const itemNumber = packList.length;
-  const itemPacked = packList.filter((i) => i.packed).length;
-  return (
-    <footer className="stats">
-      <em>
-        💼You have {itemNumber} items on your list, and you have packed{" "}
-        {itemPacked} item({100 * (itemPacked / itemNumber).toFixed(2)}%).
-      </em>
-    </footer>
-  );
-}
 export default App;
