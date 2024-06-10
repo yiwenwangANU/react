@@ -23,6 +23,10 @@ function App() {
       // how to update the single item in a list base on the conditions
     );
   }
+  function handleClearList() {
+    const confirmed = window.confirm("Delete all items?");
+    if (confirmed) setPacklist((packList) => []);
+  }
   return (
     <div className="app">
       <Logo />
@@ -31,6 +35,7 @@ function App() {
         packList={packList}
         handleDeleteItems={handleDeleteItems}
         handleToggleItem={handleToggleItem}
+        handleClearList={handleClearList}
       />
       <Stats packList={packList} />
     </div>
@@ -76,7 +81,12 @@ function Form({ handleAddItems }) {
     </form>
   );
 }
-function PackingList({ packList, handleDeleteItems, handleToggleItem }) {
+function PackingList({
+  packList,
+  handleDeleteItems,
+  handleToggleItem,
+  handleClearList,
+}) {
   const [action, setAction] = useState("input");
   let sortedList;
   if (action === "input") sortedList = packList;
@@ -107,6 +117,9 @@ function PackingList({ packList, handleDeleteItems, handleToggleItem }) {
           <option value="description">SORT BY DESCRIPTION</option>
           <option value="stats">SORT BY PACKED STATS</option>
         </select>
+        <button className="" onClick={(e) => handleClearList()}>
+          Clear List
+        </button>
       </div>
     </div>
   );
