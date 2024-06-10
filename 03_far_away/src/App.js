@@ -77,10 +77,22 @@ function Form({ handleAddItems }) {
   );
 }
 function PackingList({ packList, handleDeleteItems, handleToggleItem }) {
+  const [action, setAction] = useState("input");
+  let sortedList;
+  if (action === "input") sortedList = packList;
+  if (action === "description") {
+    sortedList = [...packList].sort((a, b) =>
+      a.description.localeCompare(b.description)
+    );
+  }
+  if (action === "stats")
+    sortedList = [...packList].sort(
+      (a, b) => Number(a.packed) - Number(b.packed)
+    );
   return (
     <div className="list">
       <ul>
-        {packList.map((item) => (
+        {sortedList.map((item) => (
           <Item
             item={item}
             handleDeleteItems={handleDeleteItems}
@@ -89,6 +101,13 @@ function PackingList({ packList, handleDeleteItems, handleToggleItem }) {
           />
         ))}
       </ul>
+      <div className="actions">
+        <select value={action} onChange={(e) => setAction(e.target.value)}>
+          <option value="input">SORT BY INPUT ORDER</option>
+          <option value="description">SORT BY DESCRIPTION</option>
+          <option value="stats">SORT BY PACKED STATS</option>
+        </select>
+      </div>
     </div>
   );
 }
