@@ -21,7 +21,7 @@ const satisfaction = [
 ];
 
 function App() {
-  const [bill, setBill] = useState(0);
+  const [bill, setBill] = useState("");
   const [tip, setTip] = useState(0);
   const [friendTip, setFriendTip] = useState(0);
   return (
@@ -49,8 +49,9 @@ function BillCalculator({ bill, setBill }) {
       <span>How much was the bill?</span>
       <input
         type="text"
+        placeholder="Bill Value"
         value={bill}
-        onChange={(e) => setBill(e.target.value)}
+        onChange={(e) => setBill(Number(e.target.value))}
       />
     </div>
   );
@@ -60,7 +61,7 @@ function LikeService({ message, tip, setTip }) {
   return (
     <div>
       <span>{message}</span>
-      <select value={tip} onChange={(e) => setTip(e.target.value)}>
+      <select value={tip} onChange={(e) => setTip(Number(e.target.value))}>
         {satisfaction.map((ele) => (
           <option value={ele.bill}>
             {ele.feel} ({ele.bill}%)
