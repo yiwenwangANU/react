@@ -1,5 +1,4 @@
 import { useState } from "react";
-import "./index.css";
 const initialFriends = [
   {
     id: 118836,
@@ -34,38 +33,57 @@ export default function App() {
     setFriendsData(newFriendsData);
   }
   return (
-    <>
-      <FriendList friendsData={friendsData} setSelectedId={setSelectedId} />
-      <AddFriendForm
-        friendsData={friendsData}
-        setFriendsData={setFriendsData}
-      />
+    <div className="app">
+      <div className="sidebar">
+        <FriendList friendsData={friendsData} setSelectedId={setSelectedId} />
+
+        <AddFriendForm
+          friendsData={friendsData}
+          setFriendsData={setFriendsData}
+        />
+      </div>
       <SplitBill
         friendsData={friendsData}
         handleBalanceUpdate={handleBalanceUpdate}
         selectedId={selectedId}
       />
-    </>
+    </div>
   );
 }
 
 function FriendList({ friendsData, setSelectedId }) {
-  return friendsData.map((friendData) => (
-    <Friend friendData={friendData} setSelectedId={setSelectedId} />
-  ));
+  return (
+    <ul>
+      {friendsData.map((friendData) => (
+        <Friend friendData={friendData} setSelectedId={setSelectedId} />
+      ))}
+    </ul>
+  );
 }
 
 function Friend({ friendData, setSelectedId }) {
   return (
-    <>
+    <li>
       <img src={friendData.image} alt={friendData.name} />
-      <p>{friendData.name}</p>
-      <p>
-        You own {friendData.name} ${friendData.balance}
-      </p>
-      <button onClick={(e) => setSelectedId(friendData.id)}>Select</button>
+      <h3>{friendData.name}</h3>
+      {friendData.balance > 0 && (
+        <p className="green">
+          {friendData.name} own you ${friendData.balance}
+        </p>
+      )}
+      {friendData.balance === 0 && (
+        <p className="grey">You and your friend is even</p>
+      )}
+      {friendData.balance < 0 && (
+        <p className="red">
+          you own {friendData.name} ${friendData.balance}
+        </p>
+      )}
+      <button className="button" onClick={(e) => setSelectedId(friendData.id)}>
+        Select
+      </button>
       <br />
-    </>
+    </li>
   );
 }
 
@@ -75,15 +93,15 @@ function AddFriendForm({ friendsData, setFriendsData }) {
   const [imgUrl, setImgUrl] = useState("https://i.pravatar.cc/48");
 
   return friendFormOn ? (
-    <>
+    <form className="form-add-friend">
       {" "}
-      <span>Friend Name</span>
+      <label>🎉Friend Name</label>
       <input
         type="text"
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
-      <span>Image Url</span>
+      <label>✨Image Url</label>
       <input
         type="text"
         value={imgUrl}
@@ -91,6 +109,7 @@ function AddFriendForm({ friendsData, setFriendsData }) {
       />
       <br />
       <button
+        className="button"
         onClick={(e) =>
           setFriendsData([
             ...friendsData,
@@ -105,10 +124,14 @@ function AddFriendForm({ friendsData, setFriendsData }) {
       >
         Add
       </button>
-      <button onClick={(e) => setFriendFormOn(false)}>Close</button>
-    </>
+      <button className="button" onClick={(e) => setFriendFormOn(false)}>
+        Close
+      </button>
+    </form>
   ) : (
-    <button onClick={(e) => setFriendFormOn(true)}>Add friend</button>
+    <button className="button" onClick={(e) => setFriendFormOn(true)}>
+      Add friend
+    </button>
   );
 }
 
@@ -121,32 +144,33 @@ function SplitBill({ friendsData, handleBalanceUpdate, selectedId }) {
   if (!selectedFriend) return;
   else {
     return (
-      <>
+      <form className="form-split-bill">
         <h2>Split the bill with {selectedFriend.name}</h2>
-        <span>Bill value </span>
+        <label>💸Bill value </label>
         <input
           type="value"
           onChange={(e) => setBill(Number(e.target.value))}
           value={bill}
         />
-        <br />
-        <span>Your Expense </span>
+
+        <label>💲Your Expense </label>
         <input
           type="value"
           onChange={(e) => setYourExpense(Number(e.target.value))}
           value={yourExpense}
         />
-        <br />
-        <span>{selectedFriend.name} Expense </span>
-        <input type="value" value={bill - yourExpense} />
-        <br />
-        <span>Who is paying the bill?</span>
+
+        <label>🤑{selectedFriend.name} Expense </label>
+        <input type="text" value={bill - yourExpense} disabled />
+
+        <span>😥Who is paying the bill?</span>
         <select onChange={(e) => setPayer(e.target.value)}>
           <option value="you">You</option>
           <option value={selectedFriend.name}>{selectedFriend.name}</option>
         </select>
-        <br />
+
         <button
+          className="button"
           onClick={(e) =>
             payer === "you"
               ? handleBalanceUpdate(selectedId, bill - yourExpense)
@@ -155,7 +179,7 @@ function SplitBill({ friendsData, handleBalanceUpdate, selectedId }) {
         >
           Split Bill
         </button>
-      </>
+      </form>
     );
   }
 }
