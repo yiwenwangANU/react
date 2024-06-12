@@ -35,7 +35,11 @@ export default function App() {
   return (
     <div className="app">
       <div className="sidebar">
-        <FriendList friendsData={friendsData} setSelectedId={setSelectedId} />
+        <FriendList
+          friendsData={friendsData}
+          selectedId={selectedId}
+          setSelectedId={setSelectedId}
+        />
 
         <AddFriendForm
           friendsData={friendsData}
@@ -46,24 +50,30 @@ export default function App() {
         friendsData={friendsData}
         handleBalanceUpdate={handleBalanceUpdate}
         selectedId={selectedId}
+        setSelectedId={setSelectedId}
       />
     </div>
   );
 }
 
-function FriendList({ friendsData, setSelectedId }) {
+function FriendList({ friendsData, selectedId, setSelectedId }) {
   return (
     <ul>
       {friendsData.map((friendData) => (
-        <Friend friendData={friendData} setSelectedId={setSelectedId} />
+        <Friend
+          friendData={friendData}
+          selectedId={selectedId}
+          setSelectedId={setSelectedId}
+        />
       ))}
     </ul>
   );
 }
 
-function Friend({ friendData, setSelectedId }) {
+function Friend({ friendData, selectedId, setSelectedId }) {
+  const isSelected = friendData.id === selectedId;
   return (
-    <li>
+    <li className={isSelected ? "selected" : ""}>
       <img src={friendData.image} alt={friendData.name} />
       <h3>{friendData.name}</h3>
       {friendData.balance > 0 && (
@@ -79,8 +89,15 @@ function Friend({ friendData, setSelectedId }) {
           you own {friendData.name} ${friendData.balance}
         </p>
       )}
-      <button className="button" onClick={(e) => setSelectedId(friendData.id)}>
-        Select
+      <button
+        className="button"
+        onClick={(e) =>
+          selectedId === friendData.id
+            ? setSelectedId("")
+            : setSelectedId(friendData.id)
+        }
+      >
+        {isSelected ? "Close" : "Select"}
       </button>
       <br />
     </li>
@@ -90,12 +107,28 @@ function Friend({ friendData, setSelectedId }) {
 function AddFriendForm({ friendsData, setFriendsData }) {
   const [friendFormOn, setFriendFormOn] = useState(false);
   const [name, setName] = useState("");
-  const [imgUrl, setImgUrl] = useState("https://i.pravatar.cc/48");
+  const [imgUrl, setImgUrl] = useState("https://i.pravatar.cc/48/");
 
+  function handleSubmit(e) {
+    e.preventDefault();
+    const id = crypto.randomUUID();
+
+    if (!name || !imgUrl) return;
+    const newFriend = {
+      name: name,
+      image: imgUrl === "https://i.pravatar.cc/48/" ? imgUrl + id : imgUrl,
+      balance: 0,
+      id: id,
+    };
+    setFriendsData([...friendsData, newFriend]);
+    setFriendFormOn(false);
+    setName("");
+    setImgUrl("https://i.pravatar.cc/48/");
+  }
   return friendFormOn ? (
-    <form className="form-add-friend">
+    <form className="form-add-friend" onSubmit={handleSubmit}>
       {" "}
-      <label>🎉Friend Name</label>
+      <label>🎉Name</label>
       <input
         type="text"
         value={name}
@@ -107,23 +140,7 @@ function AddFriendForm({ friendsData, setFriendsData }) {
         value={imgUrl}
         onChange={(e) => setImgUrl(e.target.value)}
       />
-      <br />
-      <button
-        className="button"
-        onClick={(e) =>
-          setFriendsData([
-            ...friendsData,
-            {
-              id: Date.now(),
-              name: name,
-              image: imgUrl,
-              balance: 0,
-            },
-          ])
-        }
-      >
-        Add
-      </button>
+      <button className="button">Add</button>
       <button className="button" onClick={(e) => setFriendFormOn(false)}>
         Close
       </button>
@@ -135,7 +152,12 @@ function AddFriendForm({ friendsData, setFriendsData }) {
   );
 }
 
-function SplitBill({ friendsData, handleBalanceUpdate, selectedId }) {
+function SplitBill({
+  friendsData,
+  handleBalanceUpdate,
+  selectedId,
+  setSelectedId,
+}) {
   const [bill, setBill] = useState("");
   const [yourExpense, setYourExpense] = useState("");
   const [payer, setPayer] = useState("you");
@@ -156,7 +178,11 @@ function SplitBill({ friendsData, handleBalanceUpdate, selectedId }) {
         <label>💲Your Expense </label>
         <input
           type="value"
-          onChange={(e) => setYourExpense(Number(e.target.value))}
+          onChange={(e) =>
+            e.target.value <= bill
+              ? setYourExpense(Number(e.target.value))
+              : null
+          }
           value={yourExpense}
         />
 
@@ -171,11 +197,16 @@ function SplitBill({ friendsData, handleBalanceUpdate, selectedId }) {
 
         <button
           className="button"
-          onClick={(e) =>
+          onClick={(e) => {
+            e.preventDefault();
             payer === "you"
               ? handleBalanceUpdate(selectedId, bill - yourExpense)
-              : handleBalanceUpdate(selectedId, -yourExpense)
-          }
+              : handleBalanceUpdate(selectedId, -yourExpense);
+            setBill("");
+            setYourExpense("");
+            setPayer("you");
+            setSelectedId("");
+          }}
         >
           Split Bill
         </button>
