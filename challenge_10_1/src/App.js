@@ -60,7 +60,10 @@ function TextExpander({
   return (
     <div className={className}>
       {content}
-      <span style={{ color: buttonColor }} onClick={(e) => setExpand(!expand)}>
+      <span
+        style={{ color: buttonColor, cursor: "pointer" }}
+        onClick={(e) => setExpand(!expand)}
+      >
         {expand ? collapseButtonText : expandButtonText}
       </span>
     </div>
