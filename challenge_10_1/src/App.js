@@ -1,4 +1,5 @@
-import "./styles.css";
+import "./index.css";
+import { useState } from "react";
 
 export default function App() {
   return (
@@ -30,6 +31,38 @@ export default function App() {
         travel is a pretty cool thing to think about. Who knows what we'll
         discover next!
       </TextExpander>
+    </div>
+  );
+}
+
+function TextExpander({
+  collapsedNumWords = 10,
+  expanded = false,
+  className = "box",
+  expandButtonText = "Show more",
+  collapseButtonText = "Show less",
+  buttonColor = "blue",
+  children,
+}) {
+  const [expand, setExpand] = useState(expanded);
+
+  const toCollapsedText = (text, num) => {
+    const array = text.split(" ");
+    if (array.length > num) {
+      return array.slice(0, num).join(" ") + "...";
+    } else return array;
+  };
+
+  const content = expand
+    ? children
+    : toCollapsedText(children, collapsedNumWords);
+
+  return (
+    <div className={className}>
+      {content}
+      <span style={{ color: buttonColor }} onClick={(e) => setExpand(!expand)}>
+        {expand ? collapseButtonText : expandButtonText}
+      </span>
     </div>
   );
 }
