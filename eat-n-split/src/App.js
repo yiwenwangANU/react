@@ -51,6 +51,7 @@ export default function App() {
         handleBalanceUpdate={handleBalanceUpdate}
         selectedId={selectedId}
         setSelectedId={setSelectedId}
+        key={selectedId}
       />
     </div>
   );
@@ -64,6 +65,7 @@ function FriendList({ friendsData, selectedId, setSelectedId }) {
           friendData={friendData}
           selectedId={selectedId}
           setSelectedId={setSelectedId}
+          key={friendData.id}
         />
       ))}
     </ul>
