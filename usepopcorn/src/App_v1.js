@@ -68,6 +68,11 @@ export default function App() {
   function handleAddWatched(movie) {
     setWatched((watched) => [...watched, movie]);
   }
+  function handleRemoveWatched(movie) {
+    setWatched((watched) =>
+      [...watched].filter((ele) => ele.imdbID !== movie.imdbID)
+    );
+  }
   useEffect(
     function () {
       async function fetchMovie() {
@@ -84,6 +89,7 @@ export default function App() {
             throw new Error("Movie not found!");
           }
           setMovies(data.Search);
+          console.log(movies);
         } catch (err) {
           console.log(err);
           setError(err.message);
@@ -128,7 +134,10 @@ export default function App() {
           ) : (
             <>
               <WatchedSummary watched={watched} />
-              <WatchedMoviesList watched={watched} />
+              <WatchedMoviesList
+                watched={watched}
+                onRemoveWatched={handleRemoveWatched}
+              />
             </>
           )}
         </Box>
@@ -381,19 +390,26 @@ function WatchedSummary({ watched }) {
   );
 }
 
-function WatchedMoviesList({ watched }) {
+function WatchedMoviesList({ watched, onRemoveWatched }) {
   return (
     <ul className="list">
       {watched.map((movie) => (
-        <WatchedMovie movie={movie} key={movie.imdbID} />
+        <WatchedMovie
+          movie={movie}
+          key={movie.imdbID}
+          onRemoveWatched={onRemoveWatched}
+        />
       ))}
     </ul>
   );
 }
 
-function WatchedMovie({ movie }) {
+function WatchedMovie({ movie, onRemoveWatched }) {
   return (
     <li>
+      <button className="btn-delete" onClick={(e) => onRemoveWatched(movie)}>
+        X
+      </button>
       <img src={movie.poster} alt={`${movie.title} poster`} />
       <h3>{movie.title}</h3>
       <div>
