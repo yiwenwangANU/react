@@ -73,6 +73,7 @@ export default function App() {
       [...watched].filter((ele) => ele.imdbID !== movie.imdbID)
     );
   }
+
   useEffect(
     function () {
       const controller = new AbortController();
@@ -103,6 +104,7 @@ export default function App() {
         setError("");
         return;
       }
+      handleCloseMovie();
       fetchMovie();
       return function () {
         controller.abort();
@@ -285,6 +287,20 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
     onAddWatched(newWatchedMovie);
     onCloseMovie();
   }
+  useEffect(
+    function () {
+      function callback(e) {
+        if (e.code === "Escape") {
+          onCloseMovie();
+        }
+      }
+      document.addEventListener("keydown", callback);
+      return function () {
+        document.removeEventListener("keydown", callback);
+      };
+    },
+    [onCloseMovie]
+  );
   useEffect(
     function () {
       async function getMovieDetails() {
