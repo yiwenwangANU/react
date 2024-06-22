@@ -4,31 +4,35 @@ import BalanceLoan from "./BalanceLoan";
 import Buttons from "./Buttons";
 const initialState = { isOpen: false, balance: 0, loan: 0 };
 function reducer(state, action) {
+  if (!state.isOpen && action.type !== "openAccount") return state;
   switch (action.type) {
     case "openAccount": {
       return { ...state, isOpen: true, balance: 500 };
     }
     case "deposite": {
-      return { ...state, balance: state.balance + 150 };
+      return { ...state, balance: state.balance + action.payload };
     }
     case "withdraw": {
-      return { ...state, balance: state.balance - 50 };
+      return { ...state, balance: state.balance - action.payload };
     }
     case "loan": {
+      if (state.loan > 0) return state;
       return {
         ...state,
-        balance: state.balance + 5000,
-        loan: state.loan + 5000,
+        balance: state.balance + action.payload,
+        loan: state.loan + action.payload,
       };
     }
     case "payLoan": {
+      if (state.loan > state.balance) return state;
       return {
         ...state,
-        balance: state.balance - state.loan,
         loan: 0,
+        balance: state.balance - state.loan,
       };
     }
     case "closeAccount": {
+      if (state.loan !== 0 || state.balance !== 0) return state;
       return initialState;
     }
     default: {

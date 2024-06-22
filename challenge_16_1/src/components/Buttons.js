@@ -9,20 +9,20 @@ function Buttons({ isOpen, balance, loan, dispatch }) {
       </button>
       <button
         disabled={!isOpen}
-        onClick={(e) => dispatch({ type: "deposite" })}
+        onClick={(e) => dispatch({ type: "deposite", payload: 150 })}
       >
         Deposite 150
       </button>
       <button
         disabled={!isOpen || balance < 50}
-        onClick={(e) => dispatch({ type: "withdraw" })}
+        onClick={(e) => dispatch({ type: "withdraw", payload: 50 })}
       >
         Withdraw 50
       </button>
       <br />
       <button
         disabled={!isOpen || loan > 0}
-        onClick={(e) => dispatch({ type: "loan" })}
+        onClick={(e) => dispatch({ type: "loan", payload: 5000 })}
       >
         Request a loan of 5000
       </button>
