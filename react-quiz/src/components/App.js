@@ -4,6 +4,7 @@ import Loader from "./Loader";
 import Error from "./Error";
 import StartScreen from "./StartScreen";
 import Questions from "./Questions";
+import NextButton from "./NextButton";
 import { useEffect, useReducer } from "react";
 
 const initialState = {
@@ -37,6 +38,9 @@ function reducer(state, action) {
             ? state.points + question.points
             : state.points,
       };
+    }
+    case "nextQuestion": {
+      return { ...state, index: state.index + 1, answer: null };
     }
     default: {
       throw new Error("Unknown action type");
@@ -73,11 +77,14 @@ export default function App() {
           <StartScreen numQuestions={numQuestions} dispatch={dispatch} />
         )}
         {status === "active" && (
-          <Questions
-            question={questions[index]}
-            answer={answer}
-            dispatch={dispatch}
-          />
+          <>
+            <Questions
+              question={questions[index]}
+              answer={answer}
+              dispatch={dispatch}
+            />
+            <NextButton answer={answer} dispatch={dispatch} />
+          </>
         )}
       </Main>
     </div>
