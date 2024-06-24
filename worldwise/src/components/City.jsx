@@ -11,7 +11,6 @@ const formatDate = (date) =>
 
 function City() {
   const { id } = useParams();
-  console.log(id);
   // TEMP DATA
   const currentCity = {
     cityName: "Lisbon",
