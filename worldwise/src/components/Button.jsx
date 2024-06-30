@@ -2,7 +2,7 @@ import styles from "./Button.module.css";
 function Button({ children, onClick, type }) {
   return (
     <button
-      type="button"
+      type="submit"
       className={`${styles.btn} ${styles[type]}`}
       onClick={onClick}
     >
