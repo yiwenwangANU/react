@@ -9,7 +9,7 @@ const reducer = (state, action) => {
     case "logout":
       return initialState;
     default:
-      throw new Error("Unknow action type!");
+      throw new Error("Unknown action type!");
   }
 };
 
@@ -20,10 +20,10 @@ const FAKE_USER = {
   avatar: "https://i.pravatar.cc/100?u=zz",
 };
 
-function AuthProvider({ childern }) {
+function AuthProvider({ children }) {
   const [{ user, isAuthenticated }, dispatch] = useReducer(
-    initialState,
-    reducer
+    reducer,
+    initialState
   );
   function login(email, password) {
     if (email === FAKE_USER.email && password === FAKE_USER.password)
@@ -34,7 +34,7 @@ function AuthProvider({ childern }) {
   }
   return (
     <AuthContext.Provider value={{ user, isAuthenticated, login, logout }}>
-      {childern}
+      {children}
     </AuthContext.Provider>
   );
 }
