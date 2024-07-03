@@ -1,18 +1,6 @@
 {
   "cities": [
     {
-      "id": "4f8f",
-      "cityName": "Odsherred Kommune",
-      "country": "Denmark",
-      "emoji": "🇩🇰",
-      "date": "2024-06-30T11:00:20.994Z",
-      "notes": "",
-      "position": {
-        "lat": "55.7868610063225",
-        "lng": "11.600504977909663"
-      }
-    },
-    {
       "id": "ff9d",
       "cityName": "Radviliskis",
       "country": "Lithuania",
@@ -34,6 +22,18 @@
       "position": {
         "lat": "40.832476668230825",
         "lng": "-4.550469678449385"
+      }
+    },
+    {
+      "id": "3799",
+      "cityName": "Varnamo",
+      "country": "Sweden",
+      "emoji": "🇸🇪",
+      "date": "2024-07-03T06:02:02.349Z",
+      "notes": "",
+      "position": {
+        "lat": "57.18461782733554",
+        "lng": "13.794427945673139"
       }
     }
   ]
