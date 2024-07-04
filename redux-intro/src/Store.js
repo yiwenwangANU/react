@@ -1,7 +1,11 @@
-import { createStore } from "redux";
-const initialState = { balance: 0, loan: 0, loanPurpose: null };
-
-const reducer = (state = initialState, action) => {
+import { combineReducers, createStore } from "redux";
+const initialStateAccount = { balance: 0, loan: 0, loanPurpose: null };
+const initialStateCustomer = {
+  fullName: null,
+  nationalID: null,
+  createdAt: null,
+};
+const accountReducer = (state = initialStateAccount, action) => {
   switch (action.type) {
     case "account/deposite":
       return { ...state, balance: state.balance + action.payload };
@@ -25,12 +29,36 @@ const reducer = (state = initialState, action) => {
           loanPurpose: null,
         };
       else return state;
+
     default:
       return state;
   }
 };
 
-const store = createStore(reducer);
+const customerReducer = (state = initialStateCustomer, action) => {
+  switch (action.type) {
+    case "customer/createCustomer":
+      return {
+        ...state,
+        fullName: action.payload.fullName,
+        nationalID: action.payload.nationalID,
+        createdAt: action.payload.createdAt,
+      };
+    case "customer/updateName":
+      return {
+        ...state,
+        fullName: action.payload.fullName,
+      };
+    default:
+      return state;
+  }
+};
+
+const rootReducer = combineReducers({
+  account: accountReducer,
+  customer: customerReducer,
+});
+const store = createStore(rootReducer);
 
 function deposite(amount) {
   return { type: "account/deposite", payload: amount };
@@ -48,4 +76,24 @@ function payLoan() {
   return { type: "account/payLoan" };
 }
 store.dispatch(requestLoan(500, "buy a car"));
+console.log(store.getState());
+
+function createCustomer(fullName, nationalID) {
+  return {
+    type: "customer/createCustomer",
+    payload: {
+      fullName: fullName,
+      nationalID: nationalID,
+      createdAt: new Date().toISOString(),
+    },
+  };
+}
+
+function updateName(fullName) {
+  return {
+    type: "customer/updateName",
+    payload: fullName,
+  };
+}
+store.dispatch(createCustomer("name", "id"));
 console.log(store.getState());
