@@ -12,6 +12,7 @@ const accountSlice = createSlice({
   reducers: {
     deposite(state, action) {
       state.balance = state.balance + action.payload;
+      state.isLoading = false;
     },
     withdraw(state, action) {
       state.balance = state.balance - action.payload;
@@ -32,13 +33,31 @@ const accountSlice = createSlice({
       state.loan = 0;
       state.loanPurpose = "";
     },
+    convertingCurrency(state, action) {
+      state.isLoading = true;
+    },
   },
 });
 
 export default accountSlice.reducer;
-export const { deposite, withdraw, requestLoan, payLoan } =
-  accountSlice.actions;
-console.log(requestLoan(1000, "buy a car"));
+export const { withdraw, requestLoan, payLoan } = accountSlice.actions;
+
+export function deposite(amount, currency) {
+  if (currency === "USD") return { type: "account/deposite", payload: amount };
+  return async function (dispatch, getState) {
+    dispatch({ type: "account/convertingCurrency" });
+    // API call
+    const res = await fetch(
+      `https://api.frankfurter.app/latest?amount=${amount}&from=${currency}&to=USD`
+    );
+    const data = await res.json();
+    const converted = data.rates.USD;
+
+    // return action
+    dispatch({ type: "account/deposite", payload: converted });
+  };
+}
+
 /*const accountReducer = (state = initialState, action) => {
   switch (action.type) {
     case "account/deposite":
