@@ -13,7 +13,7 @@ function AccountOperations() {
 
   function handleDeposit() {
     if (depositAmount !== "") {
-      dispatch(deposite(depositAmount, currency));
+      dispatch(deposite(depositAmount));
       setDepositAmount("");
       setCurrency("USD");
     }
